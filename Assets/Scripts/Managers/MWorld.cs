@@ -1,0 +1,99 @@
+﻿using System;
+using AssetPath;
+using Character;
+using Cysharp.Threading.Tasks;
+using Data;
+using Environment.Ground;
+using Levels;
+using Sirenix.OdinInspector;
+using UniRx;
+using UnityEngine;
+using Utils;
+
+namespace Managers
+{
+    public sealed class MWorld : BaseManager
+    {
+        private LevelData _levelData;
+        private int _index;
+
+        [HideInPrefabs] public readonly ReactiveProperty<Level> CurrentLevel = new ReactiveProperty<Level>();
+
+        [HideInPrefabs] public CharacterBehaviour Character;
+        [HideInPrefabs] public Ground[] Grounds = Array.Empty<Ground>();
+        [HideInPrefabs] public Ground[,] Grid = new Ground[0,0];
+        
+        [HideInPrefabs] public readonly ReactiveProperty<int> Progress = new ReactiveProperty<int>();
+        [HideInPrefabs] public readonly ReactiveCollection<Ground> PassedGround = new ReactiveCollection<Ground>();
+        
+        protected override void Init()
+        {
+            base.Init();
+            
+            _index = PlayerPrefs.GetInt(U.Level, 0);
+            _levelData = CustomResources.Load<LevelData>(DataPath.Paths[DataType.Level]);
+        }
+
+        protected override void Launch()
+        {
+            base.Launch();
+        }
+
+        protected override void Clear()
+        {
+            base.Clear();
+
+            Character = null;
+            Grounds = Array.Empty<Ground>();
+            Grid = new Ground[0,0];
+            Progress.SetValueAndForceNotify(0);
+            PassedGround.Clear();
+        }
+
+        public async UniTask LoadLevel(bool isWin)
+        {
+            Clear();
+
+            if (CurrentLevel.Value)
+            {
+                Destroy(CurrentLevel.Value.gameObject);
+
+                if (isWin)
+                {
+                    _index++;
+
+                    if (_index == _levelData.GetLevels.Length)
+                    {
+                        _index = 0;
+                    }
+
+                    PlayerPrefs.SetInt(U.Level, _index);
+                    PlayerPrefs.Save();
+                }
+            }
+
+            CurrentLevel.SetValueAndForceNotify(SpawnLevel());
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
+            
+            await FillLevel();
+        }
+
+        private Level SpawnLevel() => 
+            Instantiate(_levelData.GetLevels[_index], Vector3.zero, Quaternion.identity);
+
+        private async UniTask FillLevel()
+        {
+            Grounds = CurrentLevel.Value.GetComponentsInChildren<Ground>();
+
+            Grid = new Ground[30,50];
+
+            for (int i = 0; i < Grounds.Length; i++)
+            {
+                Grid[Grounds[i].Pixel.x, Grounds[i].Pixel.y] = Grounds[i];
+            }
+
+            await UniTask.Yield();
+        }
+    }
+}
