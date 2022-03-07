@@ -64,7 +64,7 @@ namespace Character
                     if (Physics.Raycast(ray, 1f, Layers.GetWalking))
                     {
                         _model.CharacterController
-                            .Move(_model.CharacterController.transform.forward * speed * Time.deltaTime);
+                            .Move(_model.Transform.forward * speed * Time.deltaTime);
                     }
                     else
                     {
@@ -87,7 +87,7 @@ namespace Character
                 _model.IsMove.SetValueAndForceNotify(true);
             }
             
-            _model.CharacterController.transform.forward = vector;
+            _model.Transform.forward = vector;
         }
     }
 }

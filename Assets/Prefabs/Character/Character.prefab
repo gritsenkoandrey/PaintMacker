@@ -1111,6 +1111,7 @@ MonoBehaviour:
   _model:
     _characterController: {fileID: 3950454482962617232}
     _animator: {fileID: 7744266199606465454}
+    _transform: {fileID: 4438585261699779028}
     _path: {fileID: 4944759792254283093}
     _center: {fileID: 8504607431770194429}
     _forward: {fileID: 7443007569554272343}

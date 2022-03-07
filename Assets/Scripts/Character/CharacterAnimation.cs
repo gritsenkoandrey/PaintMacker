@@ -30,15 +30,7 @@ namespace Character
             _model.OnVictory
                 .Subscribe(value =>
                 {
-                    if (value)
-                    {
-                        _animations[AnimationType.Victory].Invoke();
-                    }
-                    else
-                    {
-                        _animations[AnimationType.Death].Invoke();
-
-                    }
+                    _animations[value ? AnimationType.Victory : AnimationType.Death].Invoke();
                 })
                 .AddTo(_disposable);
 
@@ -46,15 +38,7 @@ namespace Character
                 .Skip(1)
                 .Subscribe(value =>
                 {
-                    if (value)
-                    {
-                        _animations[AnimationType.Run].Invoke();
-                    }
-                    else
-                    {
-                        _animations[AnimationType.Idle].Invoke();
-
-                    }
+                    _animations[value ? AnimationType.Run : AnimationType.Idle].Invoke();
                 })
                 .AddTo(_disposable);
         }

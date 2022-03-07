@@ -44,16 +44,9 @@ namespace Environment.Traps
 
         private void CheckDeactivateGround()
         {
-            Ray ray = new Ray
-            {
-                origin = _model.Ray.position,
-                direction = Vector3.down
-            };
+            Ray ray = new Ray { origin = _model.Ray.position, direction = Vector3.down };
 
-            bool isDeactivate = Physics
-                .Raycast(ray, 1f, Layers.GetDeactivate);
-
-            if (isDeactivate)
+            if (Physics.Raycast(ray, 1f, Layers.GetDeactivate))
             {
                 GameObject fx = _pool
                     .SpawnObject(_config.EnvironmentData.TrapDeathFX, _model.Transform.position, 

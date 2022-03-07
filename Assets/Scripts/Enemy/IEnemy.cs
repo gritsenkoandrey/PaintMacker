@@ -1,8 +1,8 @@
-﻿namespace Enemy
+﻿using BaseMonoBehaviour;
+
+namespace Enemy
 {
-    public interface IEnemy
+    public interface IEnemy : IBehaviour
     {
-        public void Register();
-        public void Unregister();
     }
 }

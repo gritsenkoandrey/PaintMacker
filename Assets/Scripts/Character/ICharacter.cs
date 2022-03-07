@@ -1,8 +1,8 @@
-﻿namespace Character
+﻿using BaseMonoBehaviour;
+
+namespace Character
 {
-    public interface ICharacter
+    public interface ICharacter : IBehaviour
     {
-        public void Register();
-        public void Unregister();
     }
 }

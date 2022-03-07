@@ -5,6 +5,8 @@ namespace Utils
     public static class U
     {
         public const string Level = "Level";
+
+        public const int MaxGround = 1344;
         
         public static float Remap(float iMin, float iMax, float oMin, float oMax, float value)
         {

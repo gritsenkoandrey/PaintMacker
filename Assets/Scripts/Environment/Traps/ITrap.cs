@@ -1,8 +1,8 @@
-﻿namespace Environment.Traps
+﻿using BaseMonoBehaviour;
+
+namespace Environment.Traps
 {
-    public interface ITrap
+    public interface ITrap : IBehaviour
     {
-        public void Register();
-        public void Unregister();
     }
 }

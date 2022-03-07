@@ -31,7 +31,8 @@ namespace Managers
             OnRoundStart
                 .Subscribe(_ =>
                 {
-                    ScreenInterface.GetScreenInterface()
+                    ScreenInterface
+                        .GetScreenInterface()
                         .Execute(ScreenType.GameScreen);
                     
                     _input.IsEnable.SetValueAndForceNotify(true);
@@ -47,7 +48,8 @@ namespace Managers
                         .Timer(TimeSpan.FromSeconds(time))
                         .Subscribe(_ =>
                         {
-                            ScreenInterface.GetScreenInterface()
+                            ScreenInterface
+                                .GetScreenInterface()
                                 .Execute(value ? ScreenType.WinScreen : ScreenType.LoseScreen);
                         })
                         .AddTo(_gameDisposable);
@@ -61,14 +63,18 @@ namespace Managers
                 {
                     Clear();
                     
-                    _gui.GetFade.DOFade(1f, 0f);
+                    _gui.GetFade
+                        .DOFade(1f, 0f);
                     
-                    ScreenInterface.GetScreenInterface()
+                    ScreenInterface
+                        .GetScreenInterface()
                         .Execute(ScreenType.LobbyScreen);
 
                     await _world.LoadLevel(value);
 
-                    _gui.GetFade.DOFade(0f, 0.1f).SetEase(Ease.Linear);
+                    _gui.GetFade
+                        .DOFade(0f, 0.1f)
+                        .SetEase(Ease.Linear);
                 })
                 .AddTo(ManagerDisposable);
         }

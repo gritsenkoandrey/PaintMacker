@@ -18,7 +18,9 @@ namespace Managers
 
         private static readonly Dictionary<Type, BaseManager> Container = new Dictionary<Type, BaseManager>();
 
-        public Manager(MCamera camera, MConfig config, MGame game, MGUI gui, MInput input, MLight light, MWorld world, MPool pool)
+        public Manager(MCamera camera, MConfig config, 
+            MGame game, MGUI gui, MInput input, MLight light, 
+            MWorld world, MPool pool)
         {
             _camera = camera;
             _config = config;

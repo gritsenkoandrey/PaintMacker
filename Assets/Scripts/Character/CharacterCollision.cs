@@ -32,22 +32,9 @@ namespace Character
                 .Where(_ => _model.IsMove.Value)
                 .Subscribe(_ =>
                 {
-                    Ray rayCenter = new Ray
-                    {
-                        origin = _model.Center.position,
-                        direction = Vector3.down
-                    };
-
-                    Ray rayPath = new Ray
-                    {
-                        origin = _model.Path.position,
-                        direction = Vector3.down
-                    };
-
-                    bool isGround = Physics
-                        .Raycast(rayCenter, out RaycastHit hit, 1f, Layers.GetGround);
-
-                    if (isGround)
+                    Ray rayCenter = new Ray { origin = _model.Center.position, direction = Vector3.down };
+                    
+                    if (Physics.Raycast(rayCenter, out RaycastHit hit, 1f, Layers.GetGround))
                     {
                         if (collider.Equals(hit.collider)) return;
 
@@ -61,10 +48,9 @@ namespace Character
                         ground.OnChangeGround.Execute(GroundType.Forward);
                     }
 
-                    bool isPath = Physics
-                        .Raycast(rayPath, 1f, Layers.GetPath);
+                    Ray rayPath = new Ray { origin = _model.Path.position, direction = Vector3.down };
 
-                    if (isPath)
+                    if (Physics.Raycast(rayPath, 1f, Layers.GetPath))
                     {
                         _model.OnVictory.Execute(false);
                     }

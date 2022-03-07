@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using Sirenix.OdinInspector;
+using UniRx;
 using UnityEngine;
 
 namespace Managers
@@ -11,7 +12,7 @@ namespace Managers
         private Vector3 _inputStart;
         private Vector3 _inputEnd;
 
-        public readonly ReactiveProperty<bool> IsEnable = new ReactiveProperty<bool>();
+        [HideInPrefabs] public readonly ReactiveProperty<bool> IsEnable = new ReactiveProperty<bool>();
 
         public readonly ReactiveCommand OnSwipeUp = new ReactiveCommand();
         public readonly ReactiveCommand OnSwipeDown = new ReactiveCommand();

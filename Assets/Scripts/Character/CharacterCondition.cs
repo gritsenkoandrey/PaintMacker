@@ -53,7 +53,7 @@ namespace Character
                     {
                         GameObject fx = _pool
                             .SpawnObject(_config.EnvironmentData.CharacterDeathFX, 
-                                _model.CharacterController.transform.position, Quaternion.identity);
+                                _model.Transform.position, Quaternion.identity);
                         
                         ReturnToPool(fx);
 
@@ -80,7 +80,7 @@ namespace Character
                         .Count(g => g.Pixel.index == 4);
                         
                     _world.Progress
-                        .SetValueAndForceNotify((int)U.Remap(0, 1344, 0, 100, count));
+                        .SetValueAndForceNotify((int)U.Remap(0, U.MaxGround, 0, 100, count));
 
                     if (count > _config.SettingsData.GetCountToWin)
                     {
