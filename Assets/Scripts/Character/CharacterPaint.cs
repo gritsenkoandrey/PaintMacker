@@ -70,15 +70,11 @@ namespace Character
                 }
             }
 
-            foreach (Ground g in _world.PassedGround)
-            {
-                g.OnChangeGround.Execute(GroundType.Deactivate);
-            }
-
-            foreach (Ground g in _world.PassedGround)
-            {
-                CheckBoundsPassedGround(g.Pixel.x, g.Pixel.y);
-            }
+            _world.PassedGround
+                .ForEach(g => g.OnChangeGround.Execute(GroundType.Deactivate));
+            
+            _world.PassedGround
+                .ForEach(g => CheckBoundsPassedGround(g.Pixel.x, g.Pixel.y));
                     
             _world.PassedGround.Clear();
         }

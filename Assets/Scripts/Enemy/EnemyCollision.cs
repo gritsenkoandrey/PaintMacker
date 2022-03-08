@@ -52,7 +52,7 @@ namespace Enemy
 
         private void CheckDeactivateGround()
         {
-            Ray ray = new Ray { origin = _model.Transform.position, direction = Vector3.down };
+            Ray ray = new Ray { origin = _model.Ray.position, direction = Vector3.down };
             
             if (Physics.Raycast(ray, 1f, Layers.GetDeactivate))
             {
@@ -72,7 +72,7 @@ namespace Enemy
 
         private void CheckCharacterPath()
         {
-            Ray ray = new Ray { origin = _model.Transform.position, direction = Vector3.down };
+            Ray ray = new Ray { origin = _model.Ray.position, direction = Vector3.down };
 
             if (Physics.Raycast(ray, 1f, Layers.GetPath))
             {

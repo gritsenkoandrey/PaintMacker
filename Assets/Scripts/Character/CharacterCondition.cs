@@ -58,12 +58,10 @@ namespace Character
                         ReturnToPool(fx);
 
                         int index = 0;
+                        int count = _world.PassedGround.Count;
                         
-                        foreach (Ground ground in _world.PassedGround)
-                        {
-                            DestroyGround(ground, (float)index / _world.PassedGround.Count);
-                            index++;
-                        }
+                        _world.PassedGround
+                            .ForEach(g => DestroyGround(g, (float)index++ / count));
                     }
                     
                     _model.CharacterDisposable.Clear();
@@ -78,9 +76,10 @@ namespace Character
                 {
                     int count = _world.Grounds
                         .Count(g => g.Pixel.index == 4);
+
+                    int currentProgress = (int)U.Remap(0, U.MaxGround, 0, 100, count);
                         
-                    _world.Progress
-                        .SetValueAndForceNotify((int)U.Remap(0, U.MaxGround, 0, 100, count));
+                    _world.Progress.SetValueAndForceNotify(currentProgress);
 
                     if (count > _config.SettingsData.GetCountToWin)
                     {
