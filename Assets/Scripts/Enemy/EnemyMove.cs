@@ -37,25 +37,10 @@ namespace Enemy
                         _model.Agent.ResetPath();
                     }
                     
-                    float angle = U.Random(0f, 1f) * (2f * Mathf.PI) - Mathf.PI;
-            
-                    const float radius = 2f;
-                    
-                    float x = Mathf.Cos(angle) * radius;
-                    float z = Mathf.Sin(angle) * radius;
+                    Vector3 point = GeneratePoint(2f);
 
-                    Vector3 point = new Vector3(x, 0f, z);
+                    Vector3 curHit = GeneratePointOnNavMesh(paths, point, hit);
 
-                    Vector3 curHit;
-
-                    do
-                    {
-                        NavMesh.SamplePosition(paths.GetRandom().position + point, out NavMeshHit h, 10f, 1);
-                    
-                        curHit = h.position;
-                        
-                    } while ((curHit - hit).sqrMagnitude < 2.5f);
-                    
                     hit = curHit;
                     
                     _model.Agent.SetDestination(hit);
@@ -86,6 +71,34 @@ namespace Enemy
         {
             _model.Tween.KillTween();
             _disposable.Clear();
+        }
+
+        private static Vector3 GeneratePoint(float radius)
+        {
+            float angle = U.Random(0f, 1f) * (2f * Mathf.PI) - Mathf.PI;
+
+            float x = Mathf.Cos(angle) * radius;
+            float z = Mathf.Sin(angle) * radius;
+
+            Vector3 point = new Vector3(x, 0f, z);
+            
+            return point;
+        }
+
+        private static Vector3 GeneratePointOnNavMesh(Transform[] paths, Vector3 point, Vector3 hit)
+        {
+            Vector3 curHit;
+
+            do
+            {
+                NavMesh.SamplePosition(paths.GetRandom().position + point, 
+                    out NavMeshHit h, 10f, 1);
+
+                curHit = h.position;
+                
+            } while ((curHit - hit).sqrMagnitude < 2.5f);
+
+            return curHit;
         }
     }
 }

@@ -40,28 +40,11 @@ namespace Character
                     
                     if (isVictory)
                     {
-                        _world.Progress.SetValueAndForceNotify(100);
-                            
-                        foreach (Ground ground in _world.Grounds.Where(g => g.Pixel.index != 1))
-                        {
-                            ground.OnChangeGround.Execute(GroundType.Deactivate);
-                        }
-                        
-                        _world.PassedGround.Clear();
+                        Win();
                     }
                     else
                     {
-                        GameObject fx = _pool
-                            .SpawnObject(_config.EnvironmentData.CharacterDeathFX, 
-                                _model.Transform.position, Quaternion.identity);
-                        
-                        ReturnToPool(fx);
-
-                        int index = 0;
-                        int count = _world.PassedGround.Count;
-                        
-                        _world.PassedGround
-                            .ForEach(g => DestroyGround(g, (float)index++ / count));
+                        Lose();
                     }
                     
                     _model.CharacterDisposable.Clear();
@@ -74,17 +57,7 @@ namespace Character
                 .ObserveReset()
                 .Subscribe(_ =>
                 {
-                    int count = _world.Grounds
-                        .Count(g => g.Pixel.index == 4);
-
-                    int currentProgress = (int)U.Remap(0, U.MaxGround, 0, 100, count);
-                        
-                    _world.Progress.SetValueAndForceNotify(currentProgress);
-
-                    if (count > _config.SettingsData.GetCountToWin)
-                    {
-                        _model.OnVictory.Execute(true);
-                    }
+                    CheckCurrentProgress();
                 })
                 .AddTo(_disposable);
         }
@@ -92,6 +65,32 @@ namespace Character
         public void Unregister()
         {
             _disposable.Clear();
+        }
+
+        private void Win()
+        {
+            _world.Progress.SetValueAndForceNotify(100);
+
+            foreach (Ground ground in _world.Grounds.Where(g => g.Pixel.index != 1))
+            {
+                ground.OnChangeGround.Execute(GroundType.Deactivate);
+            }
+
+            _world.PassedGround.Clear();
+        }
+
+        private void Lose()
+        {
+            GameObject fx = _pool.SpawnObject(_config.EnvironmentData.CharacterDeathFX,
+                    _model.Transform.position, Quaternion.identity);
+
+            ReturnToPool(fx);
+
+            int index = 0;
+            int count = _world.PassedGround.Count;
+
+            _world.PassedGround
+                .ForEach(g => DestroyGround(g, (float)index++ / count));
         }
 
         private async void ReturnToPool(GameObject prefab)
@@ -106,6 +105,21 @@ namespace Character
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
 
             ground.OnChangeGround.Execute(GroundType.Ground);
+        }
+
+        private void CheckCurrentProgress()
+        {
+            int count = _world.Grounds
+                .Count(g => g.Pixel.index == 4);
+
+            int currentProgress = (int)U.Remap(0, U.MaxGround, 0, 100, count);
+
+            _world.Progress.SetValueAndForceNotify(currentProgress);
+
+            if (count > _config.SettingsData.GetCountToWin)
+            {
+                _model.OnVictory.Execute(true);
+            }
         }
     }
 }

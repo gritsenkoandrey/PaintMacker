@@ -13,6 +13,8 @@ namespace Character
         private readonly CharacterModel _model;
         
         private readonly MWorld _world;
+
+        private Collider _collider;
         
         private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
@@ -25,35 +27,16 @@ namespace Character
         
         public void Register()
         {
-            Collider collider = _model.CharacterController;
+            _collider = _model.CharacterController;
             
             Observable
                 .EveryUpdate()
                 .Where(_ => _model.IsMove.Value)
                 .Subscribe(_ =>
                 {
-                    Ray rayCenter = new Ray { origin = _model.Center.position, direction = Vector3.down };
-                    
-                    if (Physics.Raycast(rayCenter, out RaycastHit hit, 1f, Layers.GetGround))
-                    {
-                        if (collider.Equals(hit.collider)) return;
+                    if (!GeneratePath()) return;
 
-                        collider = hit.collider;
-
-                        Ground ground = _world.Grounds
-                            .First(g => g.gameObject.Equals(collider.gameObject));
-
-                        _world.PassedGround.Add(ground);
-
-                        ground.OnChangeGround.Execute(GroundType.Forward);
-                    }
-
-                    Ray rayPath = new Ray { origin = _model.Path.position, direction = Vector3.down };
-
-                    if (Physics.Raycast(rayPath, 1f, Layers.GetPath))
-                    {
-                        _model.OnVictory.Execute(false);
-                    }
+                    StepOnGeneratePath();
                 })
                 .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
@@ -66,6 +49,7 @@ namespace Character
                 {
                     _model.OnVictory.Execute(false);
                 })
+                .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
             
             _model.CharacterController
@@ -76,13 +60,14 @@ namespace Character
                 {
                     _model.OnVictory.Execute(false);
                 })
+                .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
 
             _world.PassedGround
                 .ObserveReset()
                 .Subscribe(_ =>
                 {
-                    collider = _model.CharacterController;
+                    _collider = _model.CharacterController;
                 })
                 .AddTo(_disposable);
         }
@@ -90,6 +75,37 @@ namespace Character
         public void Unregister()
         {
             _disposable.Clear();
+        }
+
+        private bool GeneratePath()
+        {
+            Ray rayCenter = new Ray { origin = _model.Center.position, direction = Vector3.down };
+
+            if (Physics.Raycast(rayCenter, out RaycastHit hit, 1f, Layers.GetGround))
+            {
+                if (_collider.Equals(hit.collider)) return false;
+
+                _collider = hit.collider;
+
+                Ground ground = _world.Grounds
+                    .First(g => g.gameObject.Equals(_collider.gameObject));
+
+                _world.PassedGround.Add(ground);
+
+                ground.OnChangeGround.Execute(GroundType.Forward);
+            }
+
+            return true;
+        }
+
+        private void StepOnGeneratePath()
+        {
+            Ray rayPath = new Ray { origin = _model.Path.position, direction = Vector3.down };
+
+            if (Physics.Raycast(rayPath, 1f, Layers.GetPath))
+            {
+                _model.OnVictory.Execute(false);
+            }
         }
     }
 }

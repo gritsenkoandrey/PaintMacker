@@ -29,28 +29,28 @@ namespace Character
             _input.OnSwipeUp
                 .Subscribe(_ =>
                 {
-                    Move(Vector3.forward);
+                    MoveTo(Vector3.forward);
                 })
                 .AddTo(_disposable);
 
             _input.OnSwipeDown
                 .Subscribe(_ =>
                 {
-                    Move(Vector3.back);
+                    MoveTo(Vector3.back);
                 })
                 .AddTo(_disposable);
 
             _input.OnSwipeLeft
                 .Subscribe(_ =>
                 {
-                    Move(Vector3.left);
+                    MoveTo(Vector3.left);
                 })
                 .AddTo(_disposable);
 
             _input.OnSwipeRight
                 .Subscribe(_ =>
                 {
-                    Move(Vector3.right);
+                    MoveTo(Vector3.right);
                 })
                 .AddTo(_disposable);
 
@@ -59,17 +59,7 @@ namespace Character
                 .Where(_ => _model.IsMove.Value)
                 .Subscribe(_ =>
                 {
-                    Ray ray = new Ray { origin = _model.Forward.position, direction = Vector3.down };
-
-                    if (Physics.Raycast(ray, 1f, Layers.GetWalking))
-                    {
-                        _model.CharacterController
-                            .Move(_model.Transform.forward * speed * Time.deltaTime);
-                    }
-                    else
-                    {
-                        _model.IsMove.SetValueAndForceNotify(false);
-                    }
+                    Move(speed);
                 })
                 .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
@@ -80,7 +70,7 @@ namespace Character
             _disposable.Clear();
         }
 
-        private void Move(Vector3 vector)
+        private void MoveTo(Vector3 vector)
         {
             if (!_model.IsMove.Value)
             {
@@ -88,6 +78,21 @@ namespace Character
             }
             
             _model.Transform.forward = vector;
+        }
+
+        private void Move(float speed)
+        {
+            Ray ray = new Ray { origin = _model.Forward.position, direction = Vector3.down };
+
+            if (Physics.Raycast(ray, 1f, Layers.GetWalking))
+            {
+                _model.CharacterController
+                    .Move(_model.Transform.forward * speed * Time.deltaTime);
+            }
+            else
+            {
+                _model.IsMove.SetValueAndForceNotify(false);
+            }
         }
     }
 }
