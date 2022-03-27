@@ -22,8 +22,8 @@ namespace Character
         public CharacterController CharacterController => _characterController;
         public Animator Animator => _animator;
         public Transform Transform => _transform;
-        public Transform Path => _path;
-        public Transform Center => _center;
-        public Transform Forward => _forward;
+        public Ray RayPath => new Ray { origin = _path.position, direction = Vector3.down };
+        public Ray RayCenter => new Ray { origin = _center.position, direction = Vector3.down };
+        public Ray RayForward => new Ray { origin = _forward.position, direction = Vector3.down };
     }
 }

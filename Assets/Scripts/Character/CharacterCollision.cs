@@ -79,9 +79,7 @@ namespace Character
 
         private bool GeneratePath()
         {
-            Ray rayCenter = new Ray { origin = _model.Center.position, direction = Vector3.down };
-
-            if (Physics.Raycast(rayCenter, out RaycastHit hit, 1f, Layers.GetGround))
+            if (Physics.Raycast(_model.RayCenter, out RaycastHit hit, 1f, Layers.GetGround))
             {
                 if (_collider.Equals(hit.collider)) return false;
 
@@ -100,9 +98,7 @@ namespace Character
 
         private void StepOnGeneratePath()
         {
-            Ray rayPath = new Ray { origin = _model.Path.position, direction = Vector3.down };
-
-            if (Physics.Raycast(rayPath, 1f, Layers.GetPath))
+            if (Physics.Raycast(_model.RayPath, 1f, Layers.GetPath))
             {
                 _model.OnVictory.Execute(false);
             }

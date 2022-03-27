@@ -29,28 +29,28 @@ namespace Character
             _input.OnSwipeUp
                 .Subscribe(_ =>
                 {
-                    MoveTo(Vector3.forward);
+                    ForwardTo(Vector3.forward);
                 })
                 .AddTo(_disposable);
 
             _input.OnSwipeDown
                 .Subscribe(_ =>
                 {
-                    MoveTo(Vector3.back);
+                    ForwardTo(Vector3.back);
                 })
                 .AddTo(_disposable);
 
             _input.OnSwipeLeft
                 .Subscribe(_ =>
                 {
-                    MoveTo(Vector3.left);
+                    ForwardTo(Vector3.left);
                 })
                 .AddTo(_disposable);
 
             _input.OnSwipeRight
                 .Subscribe(_ =>
                 {
-                    MoveTo(Vector3.right);
+                    ForwardTo(Vector3.right);
                 })
                 .AddTo(_disposable);
 
@@ -70,21 +70,24 @@ namespace Character
             _disposable.Clear();
         }
 
-        private void MoveTo(Vector3 vector)
+        private void ForwardTo(Vector3 vector)
         {
-            if (!_model.IsMove.Value)
+            _model.Transform.forward = vector;
+            
+            CanMove();
+        }
+
+        private void CanMove()
+        {
+            if (!_model.IsMove.Value && Physics.Raycast(_model.RayForward, 1f, Layers.GetWalking))
             {
                 _model.IsMove.SetValueAndForceNotify(true);
             }
-            
-            _model.Transform.forward = vector;
         }
 
         private void Move(float speed)
         {
-            Ray ray = new Ray { origin = _model.Forward.position, direction = Vector3.down };
-
-            if (Physics.Raycast(ray, 1f, Layers.GetWalking))
+            if (Physics.Raycast(_model.RayForward, 1f, Layers.GetWalking))
             {
                 _model.CharacterController
                     .Move(_model.Transform.forward * speed * Time.deltaTime);

@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,9 +15,7 @@ namespace Enemy
         public NavMeshAgent Agent => _agent;
         public Animator Animator => _animator;
         public Transform Transform => _transform;
-        public Transform Ray => _ray;
-        
-        public Tween Tween;
+        public Ray Ray => new Ray { origin = _ray.position, direction = Vector3.down };
 
         public readonly ReactiveCommand OnGeneratePath = new ReactiveCommand();
     }

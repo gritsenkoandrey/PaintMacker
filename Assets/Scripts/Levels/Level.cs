@@ -9,11 +9,9 @@ namespace Levels
     {
         [SerializeField] private CinemachineVirtualCamera[] _cameras;
         
-        [SerializeField] private EnemyPath _enemyPath;
         [SerializeField] private Materials _materials;
 
         public CinemachineVirtualCamera[] Cameras => _cameras;
-        public EnemyPath EnemyPath => _enemyPath;
         public Materials Materials => _materials;
 
         [Button]

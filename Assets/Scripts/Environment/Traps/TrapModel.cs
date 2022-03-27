@@ -13,9 +13,9 @@ namespace Environment.Traps
 
         public GameObject GameObject => _gameObject;
         public Transform Transform => _transform;
-        public Transform Ray => _ray;
         public TrapSettings TrapSettings => _settings;
-
+        public Ray Ray => new Ray { origin = _ray.position, direction = Vector3.down };
+        
         public Sequence Sequence;
     }
 }

@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-using Managers;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 using UnityEngine.AI;
 using Utils;
@@ -10,70 +8,58 @@ namespace Enemy
     public sealed class EnemyMove : IEnemy
     {
         private readonly EnemyModel _model;
-        private readonly MWorld _world;
         
         private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
         public EnemyMove(EnemyModel model)
         {
             _model = model;
-
-            _world = Manager.Resolve<MWorld>();
         }
         
         public void Register()
         {
-            Vector3 hit = default;
-
-            Transform[] paths = _world.CurrentLevel.Value.EnemyPath.transform.ChildPoints();
+            float delay = 2f;
             
             _model.OnGeneratePath
                 .Subscribe(_ =>
                 {
-                    _model.Tween.KillTween();
-
-                    if (_model.Agent is { hasPath: true })
-                    {
-                        _model.Agent.ResetPath();
-                    }
+                    delay = 2f;
                     
-                    Vector3 point = GeneratePoint(2f);
-
-                    Vector3 curHit = GeneratePointOnNavMesh(paths, point, hit);
-
-                    hit = curHit;
+                    Vector3 hit = GeneratePointOnNavMesh(5f);
                     
                     _model.Agent.SetDestination(hit);
                 })
                 .AddTo(_disposable);
 
-            _model.Agent
-                .ObserveEveryValueChanged(agent => agent.hasPath)
+            Observable
+                .EveryUpdate()
                 .Where(_ => _model.Agent.isOnNavMesh)
-                .Subscribe(hasPath =>
+                .Subscribe(_ =>
                 {
-                    if (hasPath)
-                    {
-                        return;
-                    }
+                    if (_model.Agent.hasPath) return;
+
+                    delay -= Time.deltaTime;
                     
-                    _model.Tween = DOVirtual
-                        .DelayedCall(2f, () =>
-                        {
-                            _model.OnGeneratePath.Execute();
-                        })
-                        .SetUpdate(true);
+                    if (delay > 0) return;
+                    
+                    _model.OnGeneratePath.Execute();
                 })
                 .AddTo(_disposable);
         }
 
         public void Unregister()
         {
-            _model.Tween.KillTween();
             _disposable.Clear();
         }
 
-        private static Vector3 GeneratePoint(float radius)
+        private Vector3 GeneratePointOnNavMesh(float radius)
+        {
+            NavMesh.SamplePosition(_model.Transform.position + GeneratePoint(radius), out NavMeshHit h, 10f, 1);
+            
+            return h.position;
+        }
+
+        private Vector3 GeneratePoint(float radius)
         {
             float angle = U.Random(0f, 1f) * (2f * Mathf.PI) - Mathf.PI;
 
@@ -83,22 +69,6 @@ namespace Enemy
             Vector3 point = new Vector3(x, 0f, z);
             
             return point;
-        }
-
-        private static Vector3 GeneratePointOnNavMesh(Transform[] paths, Vector3 point, Vector3 hit)
-        {
-            Vector3 curHit;
-
-            do
-            {
-                NavMesh.SamplePosition(paths.GetRandom().position + point, 
-                    out NavMeshHit h, 10f, 1);
-
-                curHit = h.position;
-                
-            } while ((curHit - hit).sqrMagnitude < 2.5f);
-
-            return curHit;
         }
     }
 }
