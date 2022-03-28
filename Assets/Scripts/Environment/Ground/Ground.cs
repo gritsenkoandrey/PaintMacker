@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using BaseMonoBehaviour;
 using Levels;
 using Managers;
@@ -60,13 +61,15 @@ namespace Environment.Ground
             _actions.Clear();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetGround()
         {
             Pixel.index = 0;
             _renderer.material = _level.Materials.unpainted;
             gameObject.layer = Layers.Ground;
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetFrame()
         {
             Pixel.index = 1;
@@ -74,6 +77,7 @@ namespace Environment.Ground
             gameObject.layer = Layers.Frame;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetForward()
         {
             Pixel.index = 2;
@@ -81,6 +85,7 @@ namespace Environment.Ground
             gameObject.layer = Layers.Path;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetDeactivate()
         {
             Pixel.index = 4;
@@ -88,6 +93,7 @@ namespace Environment.Ground
             gameObject.layer = Layers.Deactivate;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetWalking()
         {
             _renderer.material = _level.Materials.frame;

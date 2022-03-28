@@ -1,4 +1,5 @@
-﻿using Managers;
+﻿using System.Runtime.CompilerServices;
+using Managers;
 using UniRx;
 using UnityEngine;
 using Utils;
@@ -85,6 +86,7 @@ namespace Character
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Move(float speed)
         {
             if (Physics.Raycast(_model.RayForward, 1f, Layers.GetWalking))
