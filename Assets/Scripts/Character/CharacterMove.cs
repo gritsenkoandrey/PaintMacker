@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Managers;
 using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using Utils;
 
@@ -25,8 +26,6 @@ namespace Character
 
         public void Register()
         {
-            float speed = _config.CharacterData.Speed;
-
             _input.OnSwipeUp
                 .Subscribe(_ => ForwardTo(Vector3.forward))
                 .AddTo(_disposable);
@@ -43,10 +42,10 @@ namespace Character
                 .Subscribe(_ => ForwardTo(Vector3.right))
                 .AddTo(_disposable);
 
-            Observable
-                .EveryUpdate()
+            _model.CharacterController
+                .UpdateAsObservable()
                 .Where(_ => _model.IsMove.Value)
-                .Subscribe(_ => Move(speed))
+                .Subscribe(_ => Move())
                 .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
         }
@@ -72,12 +71,12 @@ namespace Character
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void Move(float speed)
+        private void Move()
         {
             if (Physics.Raycast(_model.RayForward, 1f, Layers.GetWalking))
             {
                 _model.CharacterController
-                    .Move(_model.Transform.forward * speed * Time.deltaTime);
+                    .Move(_model.Transform.forward * _config.CharacterData.Speed * Time.deltaTime);
             }
             else
             {

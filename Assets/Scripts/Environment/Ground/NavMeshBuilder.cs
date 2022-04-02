@@ -29,7 +29,7 @@ namespace Environment.Ground
                 {
                     _navMeshSurface.BuildNavMesh();
                 })
-                .AddTo(this);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Start()
@@ -42,6 +42,8 @@ namespace Environment.Ground
         protected override void OnDisable()
         {
             base.OnDisable();
+            
+            LifeTimeDisposable.Clear();
         }
     }
 }

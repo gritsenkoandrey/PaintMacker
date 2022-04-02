@@ -43,7 +43,7 @@ namespace Environment.Ground
             
             OnChangeGround
                 .Subscribe(type => _actions[type].Invoke())
-                .AddTo(this);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Start()
@@ -60,7 +60,7 @@ namespace Environment.Ground
         {
             base.OnDisable();
             
-            _actions.Clear();
+            LifeTimeDisposable.Clear();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

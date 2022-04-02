@@ -13,8 +13,6 @@ namespace Character
         private readonly CharacterModel _model;
         
         private readonly MWorld _world;
-
-        private Collider _collider;
         
         private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
@@ -27,17 +25,10 @@ namespace Character
         
         public void Register()
         {
-            _collider = _model.CharacterController;
-            
-            Observable
-                .EveryUpdate()
+            _model.CharacterController
+                .UpdateAsObservable()
                 .Where(_ => _model.IsMove.Value)
-                .Subscribe(_ =>
-                {
-                    if (!GeneratePath()) return;
-
-                    StepOnGeneratePath();
-                })
+                .Subscribe(_ => GeneratePath())
                 .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
 
@@ -49,11 +40,6 @@ namespace Character
                 .Subscribe(_ => _model.OnVictory.Execute(false))
                 .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
-
-            _world.PassedGround
-                .ObserveReset()
-                .Subscribe(_ => _collider = _model.CharacterController)
-                .AddTo(_disposable);
         }
 
         public void Unregister()
@@ -61,23 +47,27 @@ namespace Character
             _disposable.Clear();
         }
 
-        private bool GeneratePath()
+        private void GeneratePath()
         {
             if (Physics.Raycast(_model.RayCenter, out RaycastHit hit, 1f, Layers.GetGround))
             {
-                if (_collider.Equals(hit.collider)) return false;
-
-                _collider = hit.collider;
-
+                if (_world.PassedGround.Count > 0 &&
+                    _world.PassedGround.GetLast().gameObject.Equals(hit.collider.gameObject))
+                {
+                    return;
+                }
+                
                 Ground ground = _world.Grounds
-                    .First(g => g.gameObject.Equals(_collider.gameObject));
+                    .First(g => g.gameObject.Equals(hit.collider.gameObject));
 
                 _world.PassedGround.Add(ground);
 
                 ground.OnChangeGround.Execute(GroundType.Forward);
+                
+                return;
             }
-
-            return true;
+            
+            StepOnGeneratePath();
         }
 
         private void StepOnGeneratePath()

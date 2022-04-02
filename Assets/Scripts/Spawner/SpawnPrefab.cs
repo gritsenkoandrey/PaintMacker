@@ -41,13 +41,6 @@ namespace Spawner
             _spawn[_prefabType].Invoke();
         }
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            
-            _spawn.Clear();
-        }
-
         private void OnDrawGizmos()
         {
             Gizmos.color = _color;

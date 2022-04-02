@@ -29,7 +29,6 @@ namespace Character
         public void Register()
         {
             _model.IsMove
-                .Skip(1)
                 .Where(value => !value)
                 .Subscribe(_ =>
                 {
