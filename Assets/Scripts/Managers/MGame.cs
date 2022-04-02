@@ -63,14 +63,18 @@ namespace Managers
                 {
                     Clear();
                     
+                    ScreenInterface
+                        .GetScreenInterface()
+                        .Execute(ScreenType.None);
+
                     _gui.GetFade
                         .DOFade(1f, 0f);
-                    
+
+                    await _world.LoadLevel(value);
+                                        
                     ScreenInterface
                         .GetScreenInterface()
                         .Execute(ScreenType.LobbyScreen);
-
-                    await _world.LoadLevel(value);
 
                     _gui.GetFade
                         .DOFade(0f, 0.1f)

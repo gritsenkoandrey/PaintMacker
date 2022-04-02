@@ -18,10 +18,9 @@ namespace Managers
         private int _index;
 
         [HideInPrefabs] public readonly ReactiveProperty<Level> CurrentLevel = new ReactiveProperty<Level>();
-
-        [HideInPrefabs] public CharacterBehaviour Character;
-        [HideInPrefabs] public Ground[] Grounds = Array.Empty<Ground>();
-        [HideInPrefabs] public Ground[,] Grid = new Ground[0,0];
+        public CharacterBehaviour Character { get; set; }
+        public Ground[] Grounds { get; private set; } = Array.Empty<Ground>();
+        public Ground[,] Grid { get; private set; } = new Ground[0,0];
         
         [HideInPrefabs] public readonly ReactiveProperty<int> Progress = new ReactiveProperty<int>();
         [HideInPrefabs] public readonly ReactiveCollection<Ground> PassedGround = new ReactiveCollection<Ground>();
@@ -74,8 +73,6 @@ namespace Managers
 
             CurrentLevel.SetValueAndForceNotify(SpawnLevel());
 
-            await UniTask.Delay(TimeSpan.FromSeconds(0.25f));
-            
             await FillLevel();
         }
 
@@ -92,8 +89,8 @@ namespace Managers
             {
                 Grid[Grounds[i].Pixel.x, Grounds[i].Pixel.y] = Grounds[i];
             }
-
-            await UniTask.Yield();
+            
+            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
         }
     }
 }

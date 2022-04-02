@@ -12,11 +12,16 @@ namespace Environment.Ground
 
         private MWorld _world;
         
-        protected override void Init()
+        protected override void Awake()
         {
-            base.Init();
+            base.Awake();
             
-            _navMeshSurface.BuildNavMesh();
+            _world = Manager.Resolve<MWorld>();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
             
             _world.PassedGround
                 .ObserveReset()
@@ -24,19 +29,19 @@ namespace Environment.Ground
                 {
                     _navMeshSurface.BuildNavMesh();
                 })
-                .AddTo(lifetimeDisposable);
+                .AddTo(this);
         }
 
-        protected override void Enable()
+        protected override void Start()
         {
-            base.Enable();
-
-            _world = Manager.Resolve<MWorld>();
+            base.Start();
+            
+            _navMeshSurface.BuildNavMesh();
         }
 
-        protected override void Disable()
+        protected override void OnDisable()
         {
-            base.Disable();
+            base.OnDisable();
         }
     }
 }

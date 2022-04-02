@@ -19,16 +19,9 @@ namespace Spawner
 
         private Dictionary<SpawnPrefabType, Action> _spawn;
 
-        protected override void Init()
+        protected override void Awake()
         {
-            base.Init();
-            
-            _spawn[_prefabType].Invoke();
-        }
-
-        protected override void Enable()
-        {
-            base.Enable();
+            base.Awake();
             
             _config = Manager.Resolve<MConfig>();
             _world = Manager.Resolve<MWorld>();
@@ -41,13 +34,20 @@ namespace Spawner
             };
         }
 
-        protected override void Disable()
+        protected override void Start()
         {
-            base.Disable();
+            base.Start();
+            
+            _spawn[_prefabType].Invoke();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
             
             _spawn.Clear();
         }
-        
+
         private void OnDrawGizmos()
         {
             Gizmos.color = _color;
@@ -66,16 +66,13 @@ namespace Spawner
             CharacterBehaviour character = InstantiatePrefab(_config.CharacterData.Character);
 
             _world.Character = character;
-            
-            character.Construct();
-            
             _world.CurrentLevel.Value.Cameras[1].Follow = character.transform;
             _world.CurrentLevel.Value.Cameras[1].LookAt = character.transform;
         }
 
         private void SpawnEnemy()
         {
-            InstantiatePrefab(_config.EnvironmentData.EnemyBehaviour).Construct();
+            InstantiatePrefab(_config.EnvironmentData.EnemyBehaviour);
         }
     }
 }

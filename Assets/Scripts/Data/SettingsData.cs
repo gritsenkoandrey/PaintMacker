@@ -7,7 +7,6 @@ namespace Data
     {
         [SerializeField] private float _timeToLose;
         [SerializeField] private float _timeToWin;
-
         [SerializeField] private float _countToWin;
 
         public float GetTimeToLose => _timeToLose;

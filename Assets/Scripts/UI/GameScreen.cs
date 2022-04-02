@@ -104,7 +104,7 @@ namespace UI
 
         private void SetProgressText(int value)
         {
-            _progressText.text = $"Painted:\n{value} %";
+            _progressText.text = $"Painted:\n{value}%";
         }
 
         private void SetFadeProgress(float value)

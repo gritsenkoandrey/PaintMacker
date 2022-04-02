@@ -28,7 +28,7 @@ namespace Enemy
         {
             float delay = _model.Delay;
 
-            _model.EndPath = InitEndPath().transform;
+            _model.EndPath = InitializeEndPath().transform;
             
             _model.OnGeneratePath
                 .Subscribe(_ =>
@@ -77,9 +77,24 @@ namespace Enemy
 
         private Vector3 GeneratePointOnNavMesh(float radius)
         {
-            NavMesh.SamplePosition(_model.Transform.position + GeneratePoint(radius), out NavMeshHit h, 10f, 1);
+            Vector3 position;
             
-            return h.position;
+            int i = 0;
+            
+            do
+            {
+                i++;
+                
+                NavMesh.SamplePosition(_model.Transform.position + GeneratePoint(radius), 
+                    out NavMeshHit hit, 10f, 1);
+
+                position = hit.position;
+                
+                if (i > 10) break;
+
+            } while ((_model.Transform.position - position).sqrMagnitude < 5f);
+            
+            return position;
         }
 
         private Vector3 GeneratePoint(float radius)
@@ -92,7 +107,7 @@ namespace Enemy
             return new Vector3(x, 0f, z);
         }
 
-        private GameObject InitEndPath()
+        private GameObject InitializeEndPath()
         {
             return _pool.SpawnObject(_config.EnvironmentData.EnemyTarget, 
                 _model.Transform.position, Quaternion.identity);

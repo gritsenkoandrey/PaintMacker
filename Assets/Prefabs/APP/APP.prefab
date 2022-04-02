@@ -132,11 +132,11 @@ MonoBehaviour:
   _logStatus: 0
   _poolItems:
   - Prefab: {fileID: 173590, guid: 682f3786b416d9847b971671dc70b087, type: 3}
-    Count: 5
+    Count: 2
   - Prefab: {fileID: 157066, guid: 6b7274f2b5776574e8e870d7c407ef30, type: 3}
     Count: 1
   - Prefab: {fileID: 477166478265087901, guid: 871c13827da06bc429a880554793ab95, type: 3}
-    Count: 2
+    Count: 1
 --- !u!1 &4158679688102029838
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: 
+    TypeName: APP.GameLifeTimeScope
   autoRun: 1
   autoInjectGameObjects: []
 --- !u!1 &4158679688127175765
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8191
 --- !u!1 &4158679689641003111
 GameObject:
   m_ObjectHideFlags: 0

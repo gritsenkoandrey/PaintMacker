@@ -52,7 +52,10 @@ namespace Enemy
             }
             else
             {
-                _model.OnGeneratePath.Execute();
+                if (!_model.Agent.CalculatePath(_model.EndPath.position, _model.Agent.path))
+                {
+                    _model.OnGeneratePath.Execute();
+                }
             }
         }
 

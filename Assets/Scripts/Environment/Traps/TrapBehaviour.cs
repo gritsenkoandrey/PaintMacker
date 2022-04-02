@@ -18,24 +18,24 @@ namespace Environment.Traps
             _traps.Add(new TrapCollision(_model));
         }
         
-        protected override void Init()
+        protected override void Awake()
         {
-            base.Init();
-            
-            _traps.ForEach(trap => trap.Register());
-        }
-
-        protected override void Enable()
-        {
-            base.Enable();
+            base.Awake();
             
             Construct();
         }
 
-        protected override void Disable()
+        protected override void OnEnable()
         {
-            base.Disable();
+            base.OnEnable();
             
+            _traps.ForEach(trap => trap.Register());
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+                        
             _traps.ForEach(trap => trap.Unregister());
         }
     }

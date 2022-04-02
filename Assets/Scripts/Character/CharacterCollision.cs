@@ -43,8 +43,8 @@ namespace Character
 
             _model.CharacterController
                 .OnTriggerEnterAsObservable()
-                .Where(c => 
-                    c.gameObject.layer == Layers.Trap || c.gameObject.layer == Layers.Agent)
+                .Where(collider => 
+                    collider.gameObject.layer == Layers.Trap || collider.gameObject.layer == Layers.Agent)
                 .First()
                 .Subscribe(_ => _model.OnVictory.Execute(false))
                 .AddTo(_model.CharacterDisposable)

@@ -1,4 +1,5 @@
 ﻿using UniRx;
+using UnityEngine;
 using Utils;
 
 namespace Enemy
@@ -17,12 +18,11 @@ namespace Enemy
         public void Register()
         {
             _model.Agent
-                .ObserveEveryValueChanged(agent => agent.hasPath)
+                .ObserveEveryValueChanged(agent => agent.velocity.sqrMagnitude)
                 .Where(_ => _model.Agent.isOnNavMesh)
-                .Skip(1)
-                .Subscribe(hasPath =>
+                .Subscribe(velocity =>
                 {
-                    _model.Animator.SetTrigger(hasPath ? Animations.Run : Animations.Idle);
+                    _model.Animator.SetFloat(Animations.Velocity, velocity, 0.05f, Time.deltaTime);
                 })
                 .AddTo(_disposable);
         }

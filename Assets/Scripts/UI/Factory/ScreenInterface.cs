@@ -25,14 +25,18 @@ namespace UI.Factory
 
             _currentScreen = screenType switch
             {
+                ScreenType.None => null,
                 ScreenType.LobbyScreen => _screenFactory.GetLobbyScreen(),
                 ScreenType.GameScreen => _screenFactory.GetGameScreen(),
                 ScreenType.WinScreen => _screenFactory.GetWinScreen(),
                 ScreenType.LoseScreen => _screenFactory.GetLoseScreen(),
                 _ => _currentScreen
             };
-            
-            _currentScreen.Show();
+
+            if (_currentScreen)
+            {
+                _currentScreen.Show();
+            }
         }
 
         public void Dispose()

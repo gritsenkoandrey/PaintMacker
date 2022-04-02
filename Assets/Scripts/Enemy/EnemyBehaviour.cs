@@ -12,28 +12,30 @@ namespace Enemy
         
         private readonly List<IEnemy> _enemies = new List<IEnemy>();
 
-        public void Construct()
+        private void Construct()
         {
             _enemies.Add(new EnemyMove(_model));
             _enemies.Add(new EnemyAnimation(_model));
             _enemies.Add(new EnemyCollision(_model));
         }
 
-        protected override void Init()
+        protected override void Awake()
         {
-            base.Init();
+            base.Awake();
+            
+            Construct();
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
             
             _enemies.ForEach(e => e.Register());
         }
 
-        protected override void Enable()
+        protected override void OnDisable()
         {
-            base.Enable();
-        }
-
-        protected override void Disable()
-        {
-            base.Disable();
+            base.OnDisable();
             
             _enemies.ForEach(e => e.Unregister());
         }

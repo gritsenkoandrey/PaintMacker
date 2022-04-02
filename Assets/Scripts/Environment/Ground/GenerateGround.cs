@@ -1,6 +1,7 @@
 ﻿using BaseMonoBehaviour;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Utils;
 
 namespace Environment.Ground
 {
@@ -10,9 +11,6 @@ namespace Environment.Ground
 
         [SerializeField] private int _width;
         [SerializeField] private int _height;
-
-        public int Width => _width;
-        public int Height => _height;
 
         [Button(ButtonSizes.Large)]
         public void Generate()
@@ -41,7 +39,7 @@ namespace Environment.Ground
                 }
             }
             
-            Debug.Log($"Generate {_width * _height} ground");
+            CustomDebug.Log($"Generate {_width * _height} ground");
         }
     }
 }
