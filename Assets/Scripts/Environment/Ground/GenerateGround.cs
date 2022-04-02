@@ -23,9 +23,10 @@ namespace Environment.Ground
             {
                 for (int y = 0; y < _height; y++)
                 {
-                    Ground ground = Instantiate(_ground, new Vector3(x/scale, 0f, y/scale), Quaternion.identity, transform);
+                    Ground ground = Instantiate(_ground, 
+                        new Vector3(x/scale, 0f, y/scale), _ground.transform.rotation, transform);
 
-                    ground.name = $"pixel-{x}:{y}";
+                    ground.name = $"Ground_{x}:{y}";
                     ground.Pixel.x = x;
                     ground.Pixel.y = y;
                     
