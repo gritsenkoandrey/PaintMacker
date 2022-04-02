@@ -17,7 +17,7 @@ namespace Environment.Ground
         private Level _level;
         private Dictionary<GroundType, Action> _actions;
 
-        public Pixel Pixel;
+        [HideInInspector] public Pixel Pixel;
         public readonly ReactiveCommand<GroundType> OnChangeGround = new ReactiveCommand<GroundType>();
 
         protected override void Init()

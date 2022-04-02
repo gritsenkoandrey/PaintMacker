@@ -1,4 +1,6 @@
-﻿using UniRx;
+﻿using Managers;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.AI;
 using Utils;
@@ -9,30 +11,40 @@ namespace Enemy
     {
         private readonly EnemyModel _model;
         
+        private readonly MConfig _config;
+        private readonly MPool _pool;
+
         private readonly CompositeDisposable _disposable = new CompositeDisposable();
 
         public EnemyMove(EnemyModel model)
         {
             _model = model;
+            
+            _config = Manager.Resolve<MConfig>();
+            _pool = Manager.Resolve<MPool>();
         }
         
         public void Register()
         {
-            float delay = 2f;
+            float delay = _model.Delay;
+
+            _model.EndPath = InitEndPath().transform;
             
             _model.OnGeneratePath
                 .Subscribe(_ =>
                 {
-                    delay = 2f;
+                    delay = _model.Delay;
                     
-                    Vector3 hit = GeneratePointOnNavMesh(5f);
-                    
+                    Vector3 hit = GeneratePointOnNavMesh(_model.Radius);
+
+                    _model.EndPath.position = hit;
+
                     _model.Agent.SetDestination(hit);
                 })
                 .AddTo(_disposable);
 
-            Observable
-                .EveryUpdate()
+            _model.Agent
+                .UpdateAsObservable()
                 .Where(_ => _model.Agent.isOnNavMesh)
                 .Subscribe(_ =>
                 {
@@ -45,11 +57,22 @@ namespace Enemy
                     _model.OnGeneratePath.Execute();
                 })
                 .AddTo(_disposable);
+
+            _model.Agent
+                .ObserveEveryValueChanged(agent => agent.hasPath)
+                .Where(_ => _model.Agent.isOnNavMesh)
+                .Subscribe(hasPath =>
+                {
+                    _model.EndPath.gameObject.SetActive(hasPath);
+                })
+                .AddTo(_disposable);
         }
 
         public void Unregister()
         {
             _disposable.Clear();
+            
+            if (_model.EndPath) _pool.ReleaseObject(_model.EndPath.gameObject);
         }
 
         private Vector3 GeneratePointOnNavMesh(float radius)
@@ -65,10 +88,14 @@ namespace Enemy
 
             float x = Mathf.Cos(angle) * radius;
             float z = Mathf.Sin(angle) * radius;
-
-            Vector3 point = new Vector3(x, 0f, z);
             
-            return point;
+            return new Vector3(x, 0f, z);
+        }
+
+        private GameObject InitEndPath()
+        {
+            return _pool.SpawnObject(_config.EnvironmentData.EnemyTarget, 
+                _model.Transform.position, Quaternion.identity);
         }
     }
 }

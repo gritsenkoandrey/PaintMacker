@@ -30,18 +30,12 @@ namespace Enemy
         {
             _world.PassedGround
                 .ObserveReset()
-                .Subscribe(_ =>
-                {
-                    CheckDeactivateGround();
-                })
+                .Subscribe(_ => CheckDeactivateGround())
                 .AddTo(_disposable);
 
             _world.PassedGround
                 .ObserveAdd()
-                .Subscribe(_ =>
-                {
-                    CheckCharacterPath();
-                })
+                .Subscribe(_ => CheckCharacterPath())
                 .AddTo(_disposable);
         }
 
@@ -54,13 +48,7 @@ namespace Enemy
         {
             if (Physics.Raycast(_model.Ray, 1f, Layers.GetDeactivate))
             {
-                _model.Transform.gameObject.SetActive(false);
-
-                GameObject fx = _pool
-                    .SpawnObject(_config.EnvironmentData.TrapDeathFX, _model.Transform.position, 
-                        Quaternion.identity);
-                        
-                ReturnToPool(fx);
+                DeathEnemy();
             }
             else
             {
@@ -74,6 +62,16 @@ namespace Enemy
             {
                 _world.Character.Model.OnVictory.Execute(false);
             }
+        }
+
+        private void DeathEnemy()
+        {
+            _model.Transform.gameObject.SetActive(false);
+            
+            GameObject fx = _pool.SpawnObject(_config.EnvironmentData.TrapDeathFX, 
+                _model.Transform.position, Quaternion.identity);
+                        
+            ReturnToPool(fx);
         }
 
         private async void ReturnToPool(GameObject fx)

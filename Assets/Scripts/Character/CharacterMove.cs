@@ -26,42 +26,27 @@ namespace Character
         public void Register()
         {
             float speed = _config.CharacterData.Speed;
-            
+
             _input.OnSwipeUp
-                .Subscribe(_ =>
-                {
-                    ForwardTo(Vector3.forward);
-                })
+                .Subscribe(_ => ForwardTo(Vector3.forward))
                 .AddTo(_disposable);
 
             _input.OnSwipeDown
-                .Subscribe(_ =>
-                {
-                    ForwardTo(Vector3.back);
-                })
+                .Subscribe(_ => ForwardTo(Vector3.back))
                 .AddTo(_disposable);
 
             _input.OnSwipeLeft
-                .Subscribe(_ =>
-                {
-                    ForwardTo(Vector3.left);
-                })
+                .Subscribe(_ => ForwardTo(Vector3.left))
                 .AddTo(_disposable);
 
             _input.OnSwipeRight
-                .Subscribe(_ =>
-                {
-                    ForwardTo(Vector3.right);
-                })
+                .Subscribe(_ => ForwardTo(Vector3.right))
                 .AddTo(_disposable);
 
             Observable
                 .EveryUpdate()
                 .Where(_ => _model.IsMove.Value)
-                .Subscribe(_ =>
-                {
-                    Move(speed);
-                })
+                .Subscribe(_ => Move(speed))
                 .AddTo(_model.CharacterDisposable)
                 .AddTo(_disposable);
         }

@@ -18,7 +18,7 @@ namespace Environment.Traps
             
             _initTrap = new Dictionary<TrapType, Action<TrapSettings>>
             {
-                { TrapType.None, (s) => Debug.Log("None") },
+                { TrapType.None, trapSettings => CustomDebug.Log("Trap Type Is Not Selected") },
                 { TrapType.Barrier, InitBarrier },
                 { TrapType.Canon, InitCanon },
                 { TrapType.Cylinder, InitCylinder },

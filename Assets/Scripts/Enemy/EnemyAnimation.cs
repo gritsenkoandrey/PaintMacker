@@ -17,13 +17,12 @@ namespace Enemy
         public void Register()
         {
             _model.Agent
-                .ObserveEveryValueChanged(agent => agent.remainingDistance)
+                .ObserveEveryValueChanged(agent => agent.hasPath)
                 .Where(_ => _model.Agent.isOnNavMesh)
-                .Subscribe(remainingDistance =>
+                .Skip(1)
+                .Subscribe(hasPath =>
                 {
-                    _model.Animator
-                        .SetTrigger(remainingDistance > _model.Agent.stoppingDistance ? 
-                            Animations.Run : Animations.Idle);
+                    _model.Animator.SetTrigger(hasPath ? Animations.Run : Animations.Idle);
                 })
                 .AddTo(_disposable);
         }

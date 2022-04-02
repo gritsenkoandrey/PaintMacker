@@ -1125,6 +1125,8 @@ MonoBehaviour:
     _animator: {fileID: 822564691766330479}
     _transform: {fileID: 6740334955554872853}
     _ray: {fileID: 1374049613734877845}
+    _delay: 2
+    _radius: 5
 --- !u!1 &6447534624674110338
 GameObject:
   m_ObjectHideFlags: 0

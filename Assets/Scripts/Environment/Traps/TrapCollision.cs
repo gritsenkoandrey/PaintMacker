@@ -30,10 +30,7 @@ namespace Environment.Traps
         {
             _world.PassedGround
                 .ObserveReset()
-                .Subscribe(_ =>
-                {
-                    CheckDeactivateGround();
-                })
+                .Subscribe(_ => CheckDeactivateGround())
                 .AddTo(_disposable);
         }
 
@@ -46,14 +43,18 @@ namespace Environment.Traps
         {
             if (Physics.Raycast(_model.Ray, 1f, Layers.GetDeactivate))
             {
-                GameObject fx = _pool
-                    .SpawnObject(_config.EnvironmentData.TrapDeathFX, _model.Transform.position, 
-                        Quaternion.identity);
-
-                ReturnToPool(fx);
-
-                _model.GameObject.SetActive(false);
+                DeathTrap();
             }
+        }
+
+        private void DeathTrap()
+        {
+            _model.GameObject.SetActive(false);
+
+            GameObject fx = _pool.SpawnObject(_config.EnvironmentData.TrapDeathFX,
+                _model.Transform.position, Quaternion.identity);
+
+            ReturnToPool(fx);
         }
 
         private async void ReturnToPool(GameObject prefab)

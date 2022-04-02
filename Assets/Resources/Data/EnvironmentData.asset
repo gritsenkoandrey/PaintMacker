@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _trapDeathFX: {fileID: 173590, guid: 682f3786b416d9847b971671dc70b087, type: 3}
   _characterDeathFX: {fileID: 157066, guid: 6b7274f2b5776574e8e870d7c407ef30, type: 3}
+  _enemyTarget: {fileID: 477166478265087901, guid: 871c13827da06bc429a880554793ab95, type: 3}
   _enemyBehaviour: {fileID: 3484595622669302560, guid: cb448225d713cf9439a5d94c84c72ffe, type: 3}

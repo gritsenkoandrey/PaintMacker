@@ -55,10 +55,7 @@ namespace Character
 
             _world.PassedGround
                 .ObserveReset()
-                .Subscribe(_ =>
-                {
-                    CheckCurrentProgress();
-                })
+                .Subscribe(_ => CheckCurrentProgress())
                 .AddTo(_disposable);
         }
 
@@ -89,8 +86,7 @@ namespace Character
             int index = 0;
             int count = _world.PassedGround.Count;
 
-            _world.PassedGround
-                .ForEach(g => DestroyGround(g, (float)index++ / count));
+            _world.PassedGround.ForEach(g => DestroyGround(g, (float)index++ / count));
         }
 
         private async void ReturnToPool(GameObject prefab)
@@ -100,7 +96,7 @@ namespace Character
             _pool.ReleaseObject(prefab);
         }
 
-        private static async void DestroyGround(Ground ground, float delay)
+        private async void DestroyGround(Ground ground, float delay)
         {
             await UniTask.Delay(TimeSpan.FromSeconds(delay));
 
@@ -109,8 +105,7 @@ namespace Character
 
         private void CheckCurrentProgress()
         {
-            int count = _world.Grounds
-                .Count(g => g.Pixel.index == 4);
+            int count = _world.Grounds.Count(g => g.Pixel.index == 4);
 
             int currentProgress = (int)U.Remap(0, U.MaxGround, 0, 100, count);
 
