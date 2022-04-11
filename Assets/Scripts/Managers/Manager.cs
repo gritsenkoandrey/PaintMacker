@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Sirenix.Utilities;
 using VContainer.Unity;
 
 namespace Managers
@@ -56,8 +55,6 @@ namespace Managers
 
         public void Dispose()
         {
-            Container.ForEach(key => key.Value.Dispose());
-            
             Container.Clear();
         }
     }

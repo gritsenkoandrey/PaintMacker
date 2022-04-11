@@ -10,9 +10,9 @@ namespace Managers
         public EnvironmentData EnvironmentData { get; private set; }
         public SettingsData SettingsData { get; private set; }
 
-        protected override void Init()
+        protected override void Enable()
         {
-            base.Init();
+            base.Enable();
             
             CharacterData = CustomResources.Load<CharacterData>(DataPath.Paths[DataType.Character]);
             EnvironmentData = CustomResources.Load<EnvironmentData>(DataPath.Paths[DataType.Environment]);
@@ -24,9 +24,9 @@ namespace Managers
             base.Launch();
         }
 
-        protected override void Clear()
+        protected override void Disable()
         {
-            base.Clear();
+            base.Disable();
         }
     }
 }

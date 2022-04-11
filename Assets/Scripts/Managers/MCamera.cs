@@ -9,9 +9,9 @@ namespace Managers
         public Transform GetCameraTransform => _camera.transform;
         public Camera GetCamera => _camera;
         
-        protected override void Init()
+        protected override void Enable()
         {
-            base.Init();
+            base.Enable();
         }
 
         protected override void Launch()
@@ -19,9 +19,9 @@ namespace Managers
             base.Launch();
         }
 
-        protected override void Clear()
+        protected override void Disable()
         {
-            base.Clear();
+            base.Disable();
         }
     }
 }

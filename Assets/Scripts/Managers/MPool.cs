@@ -22,9 +22,9 @@ namespace Managers
 	    private readonly Dictionary<GameObject, ObjectPool<GameObject>> _instanceLookup = 
 		    new Dictionary<GameObject, ObjectPool<GameObject>>();
 
-	    protected override void Init()
+	    protected override void Enable()
 	    {
-		    base.Init();
+		    base.Enable();
 		    
 		    _root = new GameObject().transform;
 		    
@@ -46,14 +46,14 @@ namespace Managers
 			    
 				    _dirty = false;
 			    })
-			    .AddTo(ManagerDisposable);
+			    .AddTo(LifeTimeDisposable);
 
 		    FirstWarmPool();
 	    }
 
-	    protected override void Clear()
+	    protected override void Disable()
 	    {
-		    base.Clear();
+		    base.Disable();
 		    
 		    _prefabLookup.Clear();
 		    _instanceLookup.Clear();

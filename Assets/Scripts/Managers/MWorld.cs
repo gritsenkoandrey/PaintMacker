@@ -25,9 +25,9 @@ namespace Managers
         [HideInPrefabs] public readonly ReactiveProperty<int> Progress = new ReactiveProperty<int>();
         [HideInPrefabs] public readonly ReactiveCollection<Ground> PassedGround = new ReactiveCollection<Ground>();
         
-        protected override void Init()
+        protected override void Enable()
         {
-            base.Init();
+            base.Enable();
             
             _index = PlayerPrefs.GetInt(U.Level, 0);
             _levelData = CustomResources.Load<LevelData>(DataPath.Paths[DataType.Level]);
@@ -38,9 +38,9 @@ namespace Managers
             base.Launch();
         }
 
-        protected override void Clear()
+        protected override void Disable()
         {
-            base.Clear();
+            base.Disable();
 
             Character = null;
             Grounds = Array.Empty<Ground>();
@@ -51,7 +51,7 @@ namespace Managers
 
         public async UniTask LoadLevel(bool isWin)
         {
-            Clear();
+            Disable();
 
             if (CurrentLevel.Value)
             {

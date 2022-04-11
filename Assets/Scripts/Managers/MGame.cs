@@ -19,9 +19,9 @@ namespace Managers
 
         private readonly CompositeDisposable _gameDisposable = new CompositeDisposable();
 
-        protected override void Init()
+        protected override void Enable()
         {
-            base.Init();
+            base.Enable();
             
             _config = Manager.Resolve<MConfig>();
             _gui = Manager.Resolve<MGUI>();
@@ -37,7 +37,7 @@ namespace Managers
                     
                     _input.IsEnable.SetValueAndForceNotify(true);
                 })
-                .AddTo(ManagerDisposable);
+                .AddTo(LifeTimeDisposable);
             
             OnRoundEnd
                 .Subscribe(value =>
@@ -56,12 +56,12 @@ namespace Managers
                     
                     _input.IsEnable.SetValueAndForceNotify(false);
                 })
-                .AddTo(ManagerDisposable);
+                .AddTo(LifeTimeDisposable);
 
             LaunchRound
                 .Subscribe(async value =>
                 {
-                    Clear();
+                    Disable();
                     
                     ScreenInterface
                         .GetScreenInterface()
@@ -80,7 +80,7 @@ namespace Managers
                         .DOFade(0f, 0.1f)
                         .SetEase(Ease.Linear);
                 })
-                .AddTo(ManagerDisposable);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Launch()
@@ -90,7 +90,7 @@ namespace Managers
             LaunchRound.Execute(false);
         }
 
-        protected override void Clear()
+        protected override void Disable()
         {
             _gameDisposable.Clear();
         }

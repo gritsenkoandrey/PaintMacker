@@ -24,12 +24,12 @@ namespace UI
                 {
                     Game.LaunchRound.Execute(true);
                 })
-                .AddTo(screenDisposable);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Unsubscribe()
         {
-            screenDisposable.Clear();
+            LifeTimeDisposable.Clear();
         }
 
         protected override void Initialize()
@@ -54,9 +54,9 @@ namespace UI
             _canvasGroup.transform.localScale = Vector3.one * 2f;
             _canvasGroup.alpha = 0f;
             
-            sequence = sequence.RefreshSequence();
+            Sequence = Sequence.RefreshSequence();
 
-            sequence
+            Sequence
                 .Append(_canvasGroup.transform
                     .DOScale(Vector3.one, 0.15f)
                     .SetEase(Ease.Linear))

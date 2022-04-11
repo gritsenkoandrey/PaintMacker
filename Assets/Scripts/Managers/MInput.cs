@@ -21,9 +21,9 @@ namespace Managers
         
         private readonly CompositeDisposable _inputDisposable = new CompositeDisposable();
         
-        protected override void Init()
+        protected override void Enable()
         {
-            base.Init();
+            base.Enable();
             
             IsEnable
                 .Subscribe(value =>
@@ -43,7 +43,7 @@ namespace Managers
                         _inputDisposable.Clear();
                     }
                 })
-                .AddTo(ManagerDisposable);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Launch()
@@ -51,9 +51,9 @@ namespace Managers
             base.Launch();
         }
 
-        protected override void Clear()
+        protected override void Disable()
         {
-            base.Clear();
+            base.Disable();
             
             _inputDisposable.Clear();
         }

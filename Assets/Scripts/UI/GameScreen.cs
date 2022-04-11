@@ -38,7 +38,7 @@ namespace UI
                             SetScaleRestartButton(Vector3.one);
                         });
                 })
-                .AddTo(screenDisposable);
+                .AddTo(LifeTimeDisposable);
 
             World.Progress
                 .Subscribe(next =>
@@ -69,16 +69,16 @@ namespace UI
                             count--;
                         })
                         .AddTo(_timerDisposable)
-                        .AddTo(screenDisposable);
+                        .AddTo(LifeTimeDisposable);
                 })
-                .AddTo(screenDisposable);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Unsubscribe()
         {
             base.Unsubscribe();
             
-            screenDisposable.Clear();
+            LifeTimeDisposable.Clear();
         }
 
         public override void Show()

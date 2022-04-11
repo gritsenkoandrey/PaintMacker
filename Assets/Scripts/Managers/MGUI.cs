@@ -10,9 +10,9 @@ namespace Managers
         public Image GetFade { get; private set; }
         public Canvas GetCanvas { get; private set; }
 
-        protected override void Init()
+        protected override void Enable()
         {
-            base.Init();
+            base.Enable();
             
             GetCanvas = InstantiateCanvas();
             GetFade = GetCanvas.GetComponent<Image>();
@@ -23,9 +23,9 @@ namespace Managers
             base.Launch();
         }
 
-        protected override void Clear()
+        protected override void Disable()
         {
-            base.Clear();
+            base.Disable();
         }
 
         private Canvas InstantiateCanvas() => 

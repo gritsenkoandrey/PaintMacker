@@ -1,33 +1,35 @@
-﻿using System;
-using UniRx;
-using UnityEngine;
+﻿using BaseMonoBehaviour;
 
 namespace Managers
 {
-    public abstract class BaseManager : MonoBehaviour, IDisposable
+    public abstract class BaseManager : BaseComponent
     {
-        protected readonly CompositeDisposable ManagerDisposable = new CompositeDisposable();
-
-        protected virtual void Init() {}
-        protected virtual void Launch() {}
-        protected virtual void Clear()
+        protected override void OnEnable()
         {
-            ManagerDisposable?.Dispose();
+            base.OnEnable();
+            
+            Enable();
         }
 
-        private void Awake()
+        protected override void Start()
         {
-            Init();
-        }
-
-        private void Start()
-        {
+            base.Start();
+            
             Launch();
         }
 
-        public void Dispose()
+        protected override void OnDisable()
         {
-            Clear();
+            base.OnDisable();
+            
+            Disable();
+        }
+
+        protected virtual void Enable() {}
+        protected virtual void Launch() {}
+        protected virtual void Disable()
+        {
+            LifeTimeDisposable.Clear();
         }
     }
 }

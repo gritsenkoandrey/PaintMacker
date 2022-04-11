@@ -1,46 +1,41 @@
-﻿using DG.Tweening;
+﻿using BaseMonoBehaviour;
+using DG.Tweening;
 using Managers;
-using UniRx;
-using UnityEngine;
-using Utils;
 
 namespace UI
 {
-    public abstract class BaseScreen : MonoBehaviour
+    public abstract class BaseScreen : BaseComponent
     {
         protected MGame Game { get; private set; }
         protected MWorld World { get; private set; }
-        
-        protected Tweener tween;
-        protected Sequence sequence;
+        protected Tweener Tween { get; set; }
+        protected Sequence Sequence { get; set; }
 
-        protected readonly CompositeDisposable screenDisposable = new CompositeDisposable();
-
-        private void Awake()
+        protected override void Awake()
         {
             Game = Manager.Resolve<MGame>();
             World = Manager.Resolve<MWorld>();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             Subscribe();
         }
 
-        private void OnDisable()
+        protected override void Start()
         {
-            Unsubscribe();
-        }
-
-        private void Start()
-        {
+            base.Start();
+            
             Initialize();
         }
 
-        private void OnDestroy()
+        protected override void OnDisable()
         {
-            screenDisposable.Clear();
-            tween.KillTween();
+            base.OnDisable();
+            
+            Unsubscribe();
         }
 
         protected virtual void Initialize() {}

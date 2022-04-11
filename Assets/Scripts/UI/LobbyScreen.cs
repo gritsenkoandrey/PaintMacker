@@ -15,7 +15,7 @@ namespace UI
         {
             base.Initialize();
             
-            tween = _text
+            Tween = _text
                 .DOScale(1.25f, 0.5f)
                 .SetEase(Ease.Linear)
                 .SetLoops(-1, LoopType.Yoyo);
@@ -25,7 +25,7 @@ namespace UI
         {
             base.Subscribe();
             
-            tween.Play();
+            Tween.Play();
 
             Init();
 
@@ -36,16 +36,16 @@ namespace UI
                 {
                     Game.OnRoundStart.Execute();
                 })
-                .AddTo(screenDisposable);
+                .AddTo(LifeTimeDisposable);
         }
 
         protected override void Unsubscribe()
         {
             base.Unsubscribe();
             
-            tween.Pause();
+            Tween.Pause();
 
-            screenDisposable.Clear();
+            LifeTimeDisposable.Clear();
         }
 
         public override void Show()
