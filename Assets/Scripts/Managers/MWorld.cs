@@ -85,9 +85,9 @@ namespace Managers
 
             Grid = new Ground[30,50];
 
-            for (int i = 0; i < Grounds.Length; i++)
+            foreach (Ground ground in Grounds)
             {
-                Grid[Grounds[i].Pixel.x, Grounds[i].Pixel.y] = Grounds[i];
+                Grid[ground.Pixel.x, ground.Pixel.y] = ground;
             }
             
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));

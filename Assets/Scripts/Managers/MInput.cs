@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System.Runtime.CompilerServices;
+using Sirenix.OdinInspector;
 using UniRx;
 using UnityEngine;
 
@@ -58,6 +59,7 @@ namespace Managers
             _inputDisposable.Clear();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateInput()
         {
             
@@ -101,6 +103,7 @@ namespace Managers
 #endif
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SwipeDetected()
         {
             if ((_inputStart - _inputEnd).sqrMagnitude > _minDistance)
