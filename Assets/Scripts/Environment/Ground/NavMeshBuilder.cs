@@ -27,7 +27,7 @@ namespace Environment.Ground
                 .ObserveReset()
                 .Subscribe(_ =>
                 {
-                    _navMeshSurface.BuildNavMesh();
+                    _navMeshSurface.UpdateNavMesh(_navMeshSurface.navMeshData);
                 })
                 .AddTo(LifeTimeDisposable);
         }
