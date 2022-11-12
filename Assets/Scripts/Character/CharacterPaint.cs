@@ -49,11 +49,7 @@ namespace Character
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PaintGrid()
         {
-            Ground ground = _world.PassedGround.FirstOrDefault(g => 
-                _world.Grid[g.Pixel.x + 1, g.Pixel.y].Pixel.index == 0 && 
-                _world.Grid[g.Pixel.x - 1, g.Pixel.y].Pixel.index == 0 || 
-                _world.Grid[g.Pixel.x, g.Pixel.y + 1].Pixel.index == 0 && 
-                _world.Grid[g.Pixel.x, g.Pixel.y - 1].Pixel.index == 0);
+            Ground ground = _world.PassedGround.FirstOrDefault(IsNoPaintGround);
 
             if (ground)
             {
@@ -61,19 +57,17 @@ namespace Character
                         
                 if (_first.Count > 0 && _first.Count <= _second.Count)
                 {
-                    _first.ForEach(g => g.OnChangeGround.Execute(GroundType.Deactivate));
+                    _first.ForEach(Deactivate);
                 }
                 else if (_second.Count > 0 && _second.Count <= _first.Count)
                 {
-                    _second.ForEach(g => g.OnChangeGround.Execute(GroundType.Deactivate));
+                    _second.ForEach(Deactivate);
                 }
             }
 
-            _world.PassedGround
-                .ForEach(g => g.OnChangeGround.Execute(GroundType.Deactivate));
+            _world.PassedGround.ForEach(Deactivate);
             
-            _world.PassedGround
-                .ForEach(g => CheckBoundsPassedGround(g.Pixel.x, g.Pixel.y));
+            _world.PassedGround.ForEach(PassedGround);
                     
             _world.PassedGround.Clear();
         }
@@ -127,8 +121,8 @@ namespace Character
                 return;
             }
             
-            _first.ForEach(g => g.Pixel.index = 0);
-            _second.ForEach(g => g.Pixel.index = 0);
+            _first.ForEach(ResetPaintGround);
+            _second.ForEach(ResetPaintGround);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -171,5 +165,28 @@ namespace Character
                 _world.Grid[x, y].OnChangeGround.Execute(GroundType.Ground);
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Deactivate(Ground ground) => ground.OnChangeGround.Execute(GroundType.Deactivate);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void PassedGround(Ground ground) => CheckBoundsPassedGround(ground.Pixel.x, ground.Pixel.y);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsNoPaintGround(Ground ground)
+        {
+            if (_world.Grid[ground.Pixel.x + 1, ground.Pixel.y].Pixel.index == 0 &&
+                _world.Grid[ground.Pixel.x - 1, ground.Pixel.y].Pixel.index == 0 ||
+                _world.Grid[ground.Pixel.x, ground.Pixel.y + 1].Pixel.index == 0 &&
+                _world.Grid[ground.Pixel.x, ground.Pixel.y - 1].Pixel.index == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ResetPaintGround(Ground ground) => ground.Pixel.index = 0;
     }
 }
